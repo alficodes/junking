@@ -1,0 +1,20 @@
+{
+  "name": "jenkins-cicd-mini-project",
+  "version": "1.0.0",
+  "description": "Production-ready CI/CD Mini Project with Jenkins Pipeline",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test tests/*.test.js",
+    "lint": "node scripts/lint.js",
+    "build": "node scripts/build.js",
+    "deploy:mock": "node scripts/deploy.js",
+    "ci": "npm run lint && npm test && npm run build"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "keywords": ["jenkins", "ci-cd", "devops", "nodejs", "pipeline"],
+  "author": "",
+  "license": "MIT"
+}
