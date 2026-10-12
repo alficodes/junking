@@ -5,3 +5,4 @@ deploy-audit.log
 .DS_Store
 Thumbs.db
 .env
+.server.pid
