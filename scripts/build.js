@@ -12,14 +12,16 @@ if (fs.existsSync(distDir)) {
 }
 fs.mkdirSync(distDir, { recursive: true });
 
-// Copy essential runtime files
-const filesToPackage = ['package.json'];
-for (const file of filesToPackage) {
-  fs.copyFileSync(path.join(rootDir, file), path.join(distDir, file));
-}
+// Copy package.json
+fs.copyFileSync(path.join(rootDir, 'package.json'), path.join(distDir, 'package.json'));
 
 // Copy src directory
 fs.cpSync(path.join(rootDir, 'src'), path.join(distDir, 'src'), { recursive: true });
+
+// Copy public frontend directory
+if (fs.existsSync(path.join(rootDir, 'public'))) {
+  fs.cpSync(path.join(rootDir, 'public'), path.join(distDir, 'public'), { recursive: true });
+}
 
 // Generate build metadata
 const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'package.json'), 'utf8'));

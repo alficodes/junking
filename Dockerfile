@@ -12,6 +12,7 @@ ENV PORT=3000
 COPY --from=base /app/node_modules ./node_modules
 COPY package*.json ./
 COPY src ./src
+COPY public ./public
 
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevOps Task Tracker | Jenkins CI/CD Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="logo-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>DevOps TaskFlow</h1>
+          <span class="subtitle">Jenkins CI/CD Verified Application</span>
+        </div>
+      </div>
+      
+      <div class="nav-status">
+        <div class="status-pill" id="healthPill">
+          <span class="status-dot pulsing" id="healthDot"></span>
+          <span id="healthText">Connecting to API...</span>
+        </div>
+        <span class="env-badge" id="envBadge">STAGING</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Top Stats Row -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon icon-tasks">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Total Tasks</span>
+          <h3 class="stat-value" id="statTotal">0</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-completed">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Completed</span>
+          <h3 class="stat-value" id="statCompleted">0</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-pending">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Pending</span>
+          <h3 class="stat-value" id="statPending">0</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-pipeline">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Pipeline Status</span>
+          <h3 class="stat-value text-green" id="statPipelineStatus">HEALTHY</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Jenkins Pipeline Visualizer Banner -->
+    <section class="card pipeline-card">
+      <div class="card-header">
+        <div>
+          <h2>⚡ Jenkins CI/CD Pipeline Simulator</h2>
+          <p class="section-desc">Interactive visualization of stages defined in the <code>Jenkinsfile</code></p>
+        </div>
+        <button class="btn btn-primary" id="btnRunPipeline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Run Simulated Pipeline
+        </button>
+      </div>
+
+      <div class="pipeline-track" id="pipelineTrack">
+        <div class="stage-step" data-stage="1">
+          <div class="stage-icon">1</div>
+          <div class="stage-info">
+            <span class="stage-name">Checkout</span>
+            <span class="stage-sub">Git Clone</span>
+          </div>
+        </div>
+        <div class="stage-connector"></div>
+
+        <div class="stage-step" data-stage="2">
+          <div class="stage-icon">2</div>
+          <div class="stage-info">
+            <span class="stage-name">Dependencies</span>
+            <span class="stage-sub">npm install</span>
+          </div>
+        </div>
+        <div class="stage-connector"></div>
+
+        <div class="stage-step" data-stage="3">
+          <div class="stage-icon">3</div>
+          <div class="stage-info">
+            <span class="stage-name">Lint Quality</span>
+            <span class="stage-sub">scripts/lint.js</span>
+          </div>
+        </div>
+        <div class="stage-connector"></div>
+
+        <div class="stage-step" data-stage="4">
+          <div class="stage-icon">4</div>
+          <div class="stage-info">
+            <span class="stage-name">Tests</span>
+            <span class="stage-sub">5 Unit Tests</span>
+          </div>
+        </div>
+        <div class="stage-connector"></div>
+
+        <div class="stage-step" data-stage="5">
+          <div class="stage-icon">5</div>
+          <div class="stage-info">
+            <span class="stage-name">Build Artifact</span>
+            <span class="stage-sub">Package dist/</span>
+          </div>
+        </div>
+        <div class="stage-connector"></div>
+
+        <div class="stage-step" data-stage="6">
+          <div class="stage-icon">6</div>
+          <div class="stage-info">
+            <span class="stage-name">Deploy</span>
+            <span class="stage-sub">Smoke Test</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-terminal" id="pipelineTerminal" style="display: none;">
+        <div class="terminal-bar">
+          <div class="terminal-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="terminal-title">Jenkins Console Output (Live Stream)</span>
+        </div>
+        <pre class="terminal-body" id="terminalLogs">Ready to trigger build...</pre>
+      </div>
+    </section>
+
+    <!-- Main Content Area: Task Management & Server Diagnostics -->
+    <div class="content-split">
+      <!-- Left Column: Task Board -->
+      <section class="card tasks-section">
+        <div class="card-header">
+          <div>
+            <h2>📋 Sprint & CI/CD Tasks</h2>
+            <p class="section-desc">Manage ongoing DevOps backlog and sprint items</p>
+          </div>
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">Done</button>
+          </div>
+        </div>
+
+        <!-- Add Task Form -->
+        <form class="task-form" id="taskForm">
+          <div class="form-row">
+            <input 
+              type="text" 
+              id="taskInput" 
+              class="form-input" 
+              placeholder="e.g. Add Docker container security scan stage..." 
+              required
+            >
+            <select id="categorySelect" class="form-select">
+              <option value="CI/CD">CI/CD</option>
+              <option value="Testing">Testing</option>
+              <option value="Deployment">Deployment</option>
+              <option value="Infrastructure">Infrastructure</option>
+              <option value="Security">Security</option>
+            </select>
+            <select id="prioritySelect" class="form-select">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+            <button type="submit" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Task
+            </button>
+          </div>
+        </form>
+
+        <!-- Tasks List -->
+        <div class="task-list" id="taskList">
+          <div class="loading-state">Loading tasks from backend API...</div>
+        </div>
+      </section>
+
+      <!-- Right Column: System Diagnostics & Architecture Info -->
+      <aside class="sidebar-column">
+        <!-- Live Diagnostics Card -->
+        <div class="card diag-card">
+          <div class="card-header-sm">
+            <h3>🖥️ Live Server Health</h3>
+            <span class="refresh-indicator" id="refreshTimer">Auto-refreshing</span>
+          </div>
+
+          <div class="diag-list">
+            <div class="diag-item">
+              <span class="diag-key">Backend Status</span>
+              <span class="diag-val text-green" id="diagStatus">Checking...</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-key">Uptime</span>
+              <span class="diag-val" id="diagUptime">0s</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-key">Node.js Version</span>
+              <span class="diag-val" id="diagNode">v...</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-key">Memory Usage</span>
+              <span class="diag-val" id="diagMemory">...</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-key">Environment</span>
+              <span class="diag-val" id="diagEnv">staging</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-key">Health Endpoint</span>
+              <a href="/api/health" target="_blank" class="diag-link">/api/health ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Teacher Notes / Cheat-sheet Card -->
+        <div class="card guide-card">
+          <div class="card-header-sm">
+            <h3>🎓 Project Viva Notes</h3>
+          </div>
+          <ul class="guide-list">
+            <li><strong>CI (Continuous Integration):</strong> Automatically installs, lints, and executes <code>tests/*.test.js</code> on every commit.</li>
+            <li><strong>CD (Continuous Deployment):</strong> Generates <code>dist/</code> artifacts and runs simulated staging smoke checks.</li>
+            <li><strong>Failsafe:</strong> If any test fails, Jenkins marks the build red and halts immediately before deploy.</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>DevOps TaskFlow • Automated with <strong>Jenkins</strong> • Node.js & Express</p>
+  </footer>
+
+  <script src="client.js"></script>
+</body>
+</html>

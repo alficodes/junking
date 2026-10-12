@@ -7,7 +7,8 @@ console.log('=== [CI Stage: Lint & Code Quality] ===');
 const filesToLint = [
   'src/app.js',
   'src/server.js',
-  'tests/app.test.js'
+  'tests/app.test.js',
+  'public/client.js'
 ];
 
 let hasErrors = false;
@@ -23,7 +24,6 @@ for (const relativeFile of filesToLint) {
 
   const content = fs.readFileSync(fullPath, 'utf8');
   try {
-    // Validate JS syntax using Node's script compilation
     new vm.Script(content);
     console.log(`✅ [Lint Pass] ${relativeFile} (Syntax Validated)`);
   } catch (err) {
