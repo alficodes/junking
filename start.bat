@@ -26,7 +26,7 @@ if not exist "node_modules\" (
 )
 
 echo [3/4] Launching background server...
-powershell -NoProfile -Command "$p = Start-Process -FilePath 'node' -ArgumentList 'src/server.js' -PassThru -WindowStyle Hidden; $p.Id | Out-File -FilePath '.server.pid' -Encoding ascii -NoNewline"
+powershell -NoProfile -Command "$dir = Get-Location; $p = Start-Process -FilePath 'node' -ArgumentList 'src/server.js' -WorkingDirectory $dir -PassThru -WindowStyle Hidden; $p.Id | Out-File -FilePath '.server.pid' -Encoding ascii -NoNewline"
 
 echo [4/4] Verifying server health...
 powershell -NoProfile -Command "Start-Sleep -Seconds 2; try { $res = Invoke-RestMethod -Uri 'http://localhost:3000/api/health' -TimeoutSec 3; Write-Host ('      API Health: ' + $res.status + ' (Node ' + $res.nodeVersion + ')') -ForegroundColor Green } catch { Write-Host '      Waiting for server...' -ForegroundColor Yellow }"
